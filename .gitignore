@@ -1,5 +1,5 @@
 # My Custom ignore
-Backend/Config/
+Backend/local_config/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
