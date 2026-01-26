@@ -8,7 +8,7 @@ class Drug(db.Model):
     __tablename__ = 'drugs'
     
     id = db.Column(db.Integer, primary_key=True)
-    ndc = db.Column(db.String(11), unique=True, nullable=False, index=True)
+    ndc = db.Column(db.String(100), unique=True, nullable=False, index=True)
     name = db.Column(db.String(255), nullable=False)
     generic_name = db.Column(db.String(255))
     brand_name = db.Column(db.String(255))
