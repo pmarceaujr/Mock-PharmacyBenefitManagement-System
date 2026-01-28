@@ -72,7 +72,7 @@ def create_app(config_name='development'):
     print("┌──────────── Loaded config from────────────┐")
     for key, value in sorted(app.config.items()):
         if not key.isupper(): continue           # skip Flask internal stuff
-        if key in ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_DEFAULT_REGION', 'JWT_SECRET_KEY', 'DATABASE_URL_PROD', 'OPENAI_API_KEY', 'SECRET_KEY']:
+        if key in ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_DEFAULT_REGION', 'JWT_SECRET_KEY', 'DATABASE_URL_PROD', 'OPENAI_API_KEY', 'SECRET_KEY', 'SQLALCHEMY_DATABASE_URI','DATABASE_URI']:
              print(f"│ {key: <28} : {'*' * 8} (hidden)")
         else:
             print(f"│ {key: <28} : {value!r}")
