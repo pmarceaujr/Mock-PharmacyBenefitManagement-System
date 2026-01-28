@@ -72,13 +72,13 @@ def create_app(config_name='development'):
     print("┌──────────── Loaded config from────────────┐")
     for key, value in sorted(app.config.items()):
         if not key.isupper(): continue           # skip Flask internal stuff
-        if key in ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_DEFAULT_REGION', 'JWT_SECRET_KEY', 'DATABASE_URL_PROD', 'OPENAI_API_KEY', 'SECRET_KEY', 'SQLALCHEMY_DATABASE_URI','DATABASE_URI']:
+        if key in ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_DEFAULT_REGION', 'JWT_SECRET_KEY', 'DATABASE_URL_PROD', 'OPENAI_API_KEY', 'SECRET_KEY', 'SQLALCHEMY_DATABASE_URI','DATABASE_URL']:
              print(f"│ {key: <28} : {'*' * 8} (hidden)")
         else:
             print(f"│ {key: <28} : {value!r}")
     print("└────────────────────────────────────────────────────────────┘")   
     print(f"database url: {app.config.get('DATABASE_URL')[-10:]} (last 10 chars shown)")     
-    print(f"SQLALCHEMY_DATABASE_URI: {app.config.get('SQLALCHEMY_DATABASE_URI')}") 
+    print(f"SQLALCHEMY_DATABASE_URI: {app.config.get('SQLALCHEMY_DATABASE_URI')[-10:]} (last 10 chars shown)")
 
  # Use Postgres on Heroku, SQLite locally
     DATABASE_URL = app.config.get('DATABASE_URL')
