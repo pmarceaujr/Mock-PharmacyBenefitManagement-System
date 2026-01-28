@@ -1,5 +1,6 @@
 # My Custom ignore
 Backend/local_config/
+frontend/node_modules
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

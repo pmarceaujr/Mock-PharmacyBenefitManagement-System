@@ -47,6 +47,7 @@ def get_members():
 def get_member(member_id):
     """Get a specific member by ID"""
     member = Member.query.get_or_404(member_id)
+    print(f"the meber data:{jsonify(member.to_dict())}")
     return jsonify(member.to_dict()), 200
 
 

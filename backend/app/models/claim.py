@@ -76,7 +76,15 @@ class Claim(db.Model):
             'claim_number': self.claim_number,
             'rx_number': self.rx_number,
             'member_id': self.member_id,
+            # Add member info
+            'member_name': f"{self.member.first_name} {self.member.last_name}" if self.member else None,
+            'member_first_name': self.member.first_name if self.member else None,
+            'member_last_name': self.member.last_name if self.member else None,            
             'drug_id': self.drug_id,
+            # Add drug info
+            'drug_name': self.drug.name if self.drug else None,
+            'drug_generic_name': self.drug.generic_name if self.drug else None,
+            'is_generic': self.drug.is_generic if self.drug else None,            
             'pharmacy_id': self.pharmacy_id,
             'fill_date': self.fill_date.isoformat() if self.fill_date else None,
             'quantity': float(self.quantity) if self.quantity else None,

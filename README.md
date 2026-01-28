@@ -45,9 +45,10 @@ A web based project of medium-complexity that simulates core PBM (Pharmacy Benef
     - Ingest and validate prescription claims (CSV upload or API)
     - Member portal to view their claims history
     - Basic claims processing workflow (pending → approved → paid)
-    - Drug search with autocomplete
+    - Drug Catalog search with autocomplete
+    - Pharmacy Network to manage pharmacy network and locations
 
-- Analytics
+- Analytics and Reports
     - Dashboard showing:
         - Total claims cost by time period
         - Generic vs. brand utilization rates

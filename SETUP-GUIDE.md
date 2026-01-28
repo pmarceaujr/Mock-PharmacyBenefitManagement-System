@@ -1,4 +1,4 @@
-# PrescriptionTrack - Complete Setup Guide (Part 1 of 5)
+# Mock-PharmacyBenefitManagement-System - Complete Setup Guide (Part 1 of 5)
 
 ## What I Built
 
@@ -8,6 +8,14 @@ A mock-up of a PBM (Pharmacy Benefits Manager) platform using:
 - PostgreSQL database with advanced features
 - AWS cloud infrastructure
 - Comprehensive test coverage
+- React 18 with Vite
+- TypeScript
+- Tailwind CSS (modern styling)
+- shadcn/ui (beautiful components)
+- Recharts (data visualization)
+- React Router (SPA routing)
+- Axios (API calls)
+- React Query (data fetching)
 - Full documentation
 
 ---
@@ -195,6 +203,43 @@ terraform --version
 
 ---
 
+### Step 7: Install Node.js and npm
+
+**macOS:**
+
+```bash
+# Install using Homebrew
+brew install node
+
+# Verify installation
+node --version  # Should show v18.x.x or higher
+npm --version   # Should show v9.x.x or higher
+```
+
+**Ubuntu/Debian Linux:**
+
+```bash
+# Install Node.js 18.x
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Verify installation
+node --version
+npm --version
+```
+
+**Windows:**
+
+1. Visit https://nodejs.org/
+2. Download "LTS" version (18.x or higher)
+3. Run installer with default settings
+4. Open Command Prompt and verify:
+
+```cmd
+node --version
+npm --version
+```
+
 ## PART 2: HOW I INITIALIZED MY PROJECT
 
 ### Step 7: Create Project Directory
@@ -210,8 +255,8 @@ mkdir projects
 cd projects
 
 # Create project
-mkdir prescriptiontrack
-cd prescriptiontrack
+mkdir Mock-PharmacyBenefitManagement-System
+cd Mock-PharmacyBenefitManagement-System
 
 ```
 
@@ -234,7 +279,10 @@ git clone https://github.com/YourUserName/YourCustomGitHubRepo.git
 ### Step 9: Create Directory Structure
 
 ```bash
-# Create all directories at once
+# Make sure you're in frontend directory
+pwd  # Should show: .../Mock-PharmacyBenefitManagement-System/frontend
+
+# Create all backend directories at once
 mkdir -p backend/app/models
 mkdir -p backend/app/routes
 mkdir -p backend/app/services
@@ -250,9 +298,16 @@ mkdir -p terraform/environments/dev
 mkdir -p terraform/environments/prod
 mkdir -p scripts
 mkdir -p docs
+
+# Make sure you're in project root directory
+pwd  # Should show: .../Mock-PharmacyBenefitManagement-System
+
+# Create  frontend directory
+mkdir -p frontend
+
 ```
 
-**Windows users:** If `mkdir -p` doesn't work:
+**Windows users:** If `mkdir -p` doesn't work: Create same struture using mkdir:
 
 ```cmd
 mkdir backend\app\models
@@ -270,6 +325,7 @@ mkdir terraform\environments\dev
 mkdir terraform\environments\prod
 mkdir scripts
 mkdir docs
+mkdir frontend
 ```
 
 **Verify Structure:**
@@ -290,12 +346,15 @@ You should see:
 ├── backend
 │   ├── app
 │   ├── migrations
+│   ├── scripts
 │   └── tests
 ├── docs
-├── scripts
-└── terraform
-    ├── environments
-    └── modules
+├── terraform
+│   ├── environments
+│   └── modules
+└── frontend
+
+
 ```
 
 ---
@@ -317,7 +376,7 @@ source venv/bin/activate
 venv\Scripts\activate
 
 # Your prompt should now show (venv) at the start
-# Example: (venv) user@computer:~/projects/prescriptiontrack/backend$
+# Example: (venv) user@computer:~/projects/Mock-PharmacyBenefitManagement-System/backend$
 ```
 
 ---
@@ -430,19 +489,19 @@ Copy and paste these commands one at a time:
 
 ```sql
 -- Create database
-CREATE DATABASE prescriptiontrack;
+CREATE DATABASE pharmacybenmgr;
 
 -- Create user
-CREATE USER prescriptiontrack_user WITH PASSWORD 'dev_password_123';
+CREATE USER pbm_user WITH PASSWORD 'dev_password_123';
 
 -- Grant database privileges
-GRANT ALL PRIVILEGES ON DATABASE prescriptiontrack TO prescriptiontrack_user;
+GRANT ALL PRIVILEGES ON DATABASE pharmacybenmgr TO pbm_user;
 
 -- Connect to new database
-\c prescriptiontrack
+\c pharmacybenmgr
 
 -- Grant schema privileges
-GRANT ALL ON SCHEMA public TO prescriptiontrack_user;
+GRANT ALL ON SCHEMA public TO pbm_user;
 
 -- Verify connection
 SELECT current_database();
@@ -456,9 +515,9 @@ SELECT current_database();
 - `CREATE DATABASE`
 - `CREATE ROLE`
 - `GRANT`
-- `You are now connected to database "prescriptiontrack"`
+- `You are now connected to database "pharmacybenmgr"`
 - `GRANT`
-- ` prescriptiontrack`
+- ` pharmacybenmgr`
 
 ---
 
@@ -466,11 +525,11 @@ SELECT current_database();
 
 ```bash
 # Test connection
-psql -U prescriptiontrack_user -d prescriptiontrack -h localhost
+psql -U pbm_user -d pharmacybenmgr -h localhost
 
 # Password: dev_password_123
 
-# You should see: prescriptiontrack=>
+# You should see: pharmacybenmgr=>
 
 # List tables (should be empty for now)
 \dt
@@ -500,7 +559,7 @@ FLASK_ENV=development
 SECRET_KEY=dev-secret-key-change-in-production
 
 # Database Configuration
-DATABASE_URL=postgresql://prescriptiontrack_user:dev_password_123@localhost:5432/prescriptiontrack
+DATABASE_URL=postgresql://pbm_user:dev_password_123@localhost:5432/pharmacybenmgr
 
 # AWS Configuration (fill later)
 AWS_ACCESS_KEY_ID=
@@ -523,7 +582,7 @@ cat .env
 
 ---
 
-## PART 4: VERIFY SETUP
+## PART 4: VERIFY BACKEND SETUP
 
 ### Step 16: Final Verification Checklist
 
@@ -552,14 +611,14 @@ terraform --version
 
 # 6. Virtual environment activated
 which python
-# Expected: /path/to/prescriptiontrack/backend/venv/bin/python
+# Expected: /path/to/Mock-PharmacyBenefitManagement-System/backend/venv/bin/python
 
 # 7. Packages installed
 pip list | grep Flask
 # Should show Flask and Flask-related packages
 
 # 8. Database connection
-psql -U prescriptiontrack_user -d prescriptiontrack -h localhost -c "SELECT version();"
+psql -U pbm_user -d pharmacybenmgr -h localhost -c "SELECT version();"
 # Should show PostgreSQL version info
 ```
 
@@ -568,3 +627,240 @@ psql -U prescriptiontrack_user -d prescriptiontrack -h localhost -c "SELECT vers
 **Any checks failed?** ❌ Go back to the relevant step and troubleshoot.
 
 ---
+
+## PART 5: FRONTEND SETUP
+
+### Step 16: Verify Backend is Running
+
+1. Before building frontend, ensure backend API is accessible:
+    - In a separate terminal, navigate to backend
+
+```bash
+cd ~/projects/Mock-PharmacyBenefitManagement-System/backend
+# activate .vevn
+
+# Start backend server
+python run.py
+
+# Should see:
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.12:5000
+Press CTRL+C to quit
+ * Restarting with stat
+
+# In a new terminal
+curl http://localhost:5000/health
+
+# Expected response:
+{
+  "message": "the Mock-PBM System API is healthy, maybe not wealthy, but very wise",
+  "status": "running"
+}
+```
+
+---
+
+### Step 17: Create React Application
+
+1. Create Vite + React + TypeScript Project
+
+```bash
+# Navigate to project root
+cd ~/projects/Mock-PharmacyBenefitManagement-System
+
+# Create React app with Vite
+npm create vite@latest frontend -- --template react-ts
+
+# IF prompted:  Install with npm and start now?
+# Select:  Yes
+
+# You'll see:
+◇  Installing dependencies with npm...
+
+added 176 packages, and audited 177 packages in 10s
+
+45 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+│
+◇  Starting dev server...
+
+> frontend@0.0.0 dev
+> vite
+
+
+  VITE v7.3.1  ready in 1288 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+```
+
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install base dependencies
+npm install
+
+# This will take 1-2 minutes
+
+# You should see: added XXX packages
+```
+
+### Step 18: Install Additional Packages
+
+1. UI Framework and Components
+
+```bash
+npm install -D tailwindcss@3 postcss autoprefixer
+npm install @radix-ui/react-slot @radix-ui/react-dialog @radix-ui/react-dropdown-menu
+npm install @radix-ui/react-select @radix-ui/react-label @radix-ui/react-tabs
+npm install class-variance-authority clsx tailwind-merge
+
+# Routing (for SPA)
+npm install react-router-dom
+
+# Data Fetching and State Management
+npm install @tanstack/react-query axios
+
+# Charts and Visualization
+npm install recharts
+
+# Icons
+npm install lucide-react
+
+# Form Handling
+npm install react-hook-form zod @hookform/resolvers
+
+# Date Handling
+npm install date-fns
+
+# Development Dependencies
+npm install -D @types/node
+```
+
+### Step 19: Configure Tailwind CSS
+
+1. Initialize Tailwind
+
+```bash
+# Still in frontend directory
+npx tailwindcss init -p
+
+# This will create:
+# Created Tailwind CSS config file: tailwind.config.js
+# Created PostCSS config file: postcss.config.js
+```
+
+### Step 20: Update Directory Structure
+
+```bash
+# Make sure you're in frontend directory
+pwd  # Should show: .../Mock-PharmacyBenefitManagement-System/frontend
+
+# Create  frontend directory
+mkdir -p frontend/src/components/ui
+mkdir -p frontend/src/components/charts
+mkdir -p frontend/src/components/claims
+mkdir -p frontend/src/components/members
+mkdir -p frontend/src/components/dashboard
+mkdir -p frontend/src/components/layout
+mkdir -p frontend/src/pages
+mkdir -p frontend/src/services
+mkdir -p frontend/src/hooks
+mkdir -p frontend/src/types
+mkdir -p frontend/src/utils
+mkdir -p frontend/src/lib
+
+```
+
+**Windows users:** If `mkdir -p` doesn't work: Create same struture using mkdir:
+
+```cmd
+
+mkdir frontend/src/components/ui
+mkdir frontend/src/components/charts
+mkdir frontend/src/components/claims
+mkdir frontend/src/components/members
+mkdir frontend/src/components/dashboard
+mkdir frontend/src/components/layout
+mkdir frontend/src/pages
+mkdir frontend/src/services
+mkdir frontend/src/hooks
+mkdir frontend/src/types
+mkdir frontend/src/utils
+mkdir frontend/src/lib
+```
+
+**Verify Structure:**
+
+```bash
+# Install tree (if not already)
+# macOS: brew install tree
+# Ubuntu: sudo apt install tree
+# Windows: use File Explorer
+
+tree -L 2
+```
+
+You should see:
+
+```
+.
+├── backend
+│   ├── app
+│   ├── migrations
+│   ├── scripts
+│   └── tests
+├── docs
+├── terraform
+│   ├── environments
+│   └── modules
+└── frontend
+    ├──src
+    ├── components
+    │   ├── charts
+    │   ├── claims
+    │   ├── dashboard
+    │   ├── layout
+    │   ├── members
+    │   └── ui
+    ├── hooks
+    ├── lib
+    ├── pages
+    ├── services
+    ├── types
+    └── utils
+
+```
+
+### Step 21: Test Initial Setup
+
+1. Start Development Server
+
+```bash
+# Make sure you're in frontend directory
+npm run dev
+
+# Expected output:
+  VITE v4.x.x  ready in XXX ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: use --host to expose
+  ➜  press h to show help
+```
+
+2. Open Browser
+    - Open browser (Chrome, Firefox, Safari, Edge)
+    - Go to: http://localhost:3000
+    - You should see the default Vite + React page
+
+**All checks passed?** ✅ ASll the prerequisites are now satisfied
+
+**Any checks failed?** ❌ Go back to the relevant step and troubleshoot.
