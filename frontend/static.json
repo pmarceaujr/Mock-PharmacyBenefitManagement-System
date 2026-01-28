@@ -1,15 +1,17 @@
 {
   "root": "dist",
-  "clean_urls": true,
   "routes": {
     "/**": "index.html"
   },
   "headers": {
-    "/**": {
-      "Cache-Control": "no-cache, no-store, must-revalidate"
+    "/**/*.@(js|css|map)": {
+      "Cache-Control": "public, max-age=31536000"
     },
     "/assets/**": {
-      "Cache-Control": "public, max-age=31536000, immutable"
+      "Cache-Control": "public, max-age=31536000"
     }
+  },
+  "error_page": {
+    "404": "/index.html"
   }
 }
