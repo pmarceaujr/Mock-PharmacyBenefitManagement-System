@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
+import { ReactNode } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 interface TopDrug {
@@ -35,11 +36,24 @@ export function TopDrugsChart({ data, limit = 10 }: TopDrugsChartProps) {
                         <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={90} />
                         <Tooltip
                             contentStyle={{ backgroundColor: "rgba(255, 255, 255, 0.95)", border: "1px solid #ccc" }}
-                            formatter={(value: number, name: string) => {
-                                if (name === "total_cost") return formatCurrency(value);
-                                return value;
+                            formatter={(value: number | undefined, name: string | undefined) => {
+                                const displayValue = value ?? 0;
+                                const displayName = name ?? "Unknown";
+
+                                let formatted: string | number;
+                                if (displayName === "total_cost") {
+                                    formatted = formatCurrency(displayValue);
+                                } else {
+                                    formatted = displayValue; // or displayValue.toLocaleString()
+                                }
+
+                                return [formatted, displayName];
                             }}
-                            labelFormatter={(label: string) => `Drug: ${label}`}
+                            labelFormatter={(label: ReactNode) => {
+                                // Safe handling – in practice, label is usually a string for category axes
+                                const displayLabel = typeof label === "string" ? label : String(label ?? "N/A");
+                                return `Drug: ${displayLabel}`;
+                            }}
                         />
                         <Legend />
                         <Bar dataKey="total_cost" fill="#3b82f6" name="Total Cost" radius={[0, 8, 8, 0]} />

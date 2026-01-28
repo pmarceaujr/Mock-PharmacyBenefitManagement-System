@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { Cell, Legend, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Tooltip } from "recharts";
 
 interface GenericVsBrandData {
     type: "Generic" | "Brand";
@@ -17,6 +17,19 @@ const COLORS = {
     Brand: "#3b82f6",
 };
 
+// Define the label renderer
+const pieLabel = (props: PieLabelRenderProps) => {
+    // Safely access custom field from the original data entry
+    // Recharts attaches the full data entry to props
+    const { payload, percent } = props;
+
+    // payload is the original data object → it has .type
+    const type = (payload as GenericVsBrandData | undefined)?.type ?? "Unknown";
+
+    if (percent === undefined) return null;
+
+    return `${type}: ${(percent * 100).toFixed(0)}%`;
+};
 export function GenericVsBrandChart({ data }: GenericVsBrandChartProps) {
     const totalClaims = data.reduce((sum, item) => sum + item.claims, 0);
     const totalCost = data.reduce((sum, item) => sum + item.cost, 0);
@@ -40,7 +53,8 @@ export function GenericVsBrandChart({ data }: GenericVsBrandChartProps) {
                                     cx="50%"
                                     cy="50%"
                                     labelLine={false}
-                                    label={({ type, percent }) => `${type}: ${(percent * 100).toFixed(0)}%`}
+                                    // label={({ type, percent }) => `${type}: ${(percent * 100).toFixed(0)}%`}
+                                    label={pieLabel}
                                     outerRadius={80}
                                     fill="#8884d8"
                                     dataKey="claims"
@@ -49,7 +63,14 @@ export function GenericVsBrandChart({ data }: GenericVsBrandChartProps) {
                                         <Cell key={entry.type} fill={COLORS[entry.type]} />
                                     ))}
                                 </Pie>
-                                <Tooltip formatter={(value: number) => value.toLocaleString()} />
+                                <Tooltip
+                                    formatter={(value: number | undefined) => {
+                                        // Guard against undefined (rare in practice with valid data)
+                                        if (value === undefined) return "N/A";
+
+                                        return value.toLocaleString();
+                                    }}
+                                />
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
@@ -62,7 +83,7 @@ export function GenericVsBrandChart({ data }: GenericVsBrandChartProps) {
                                     cx="50%"
                                     cy="50%"
                                     labelLine={false}
-                                    label={({ type, percent }) => `${type}: ${(percent * 100).toFixed(0)}%`}
+                                    label={pieLabel}
                                     outerRadius={80}
                                     fill="#8884d8"
                                     dataKey="cost"
@@ -71,7 +92,22 @@ export function GenericVsBrandChart({ data }: GenericVsBrandChartProps) {
                                         <Cell key={entry.type} fill={COLORS[entry.type]} />
                                     ))}
                                 </Pie>
-                                <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                                <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: "rgba(255, 255, 255, 0.95)",
+                                        border: "1px solid #ccc",
+                                    }}
+                                    formatter={(value: number | undefined, name: string | undefined) => {
+                                        // Safe defaults if either is missing (rare, but satisfies TS)
+                                        const safeName = name ?? "Unknown";
+                                        const safeValue = value ?? 0;
+
+                                        if (safeName.includes("cost")) {
+                                            return formatCurrency(safeValue);
+                                        }
+                                        return safeValue.toFixed(0);
+                                    }}
+                                />
                             </PieChart>
                         </ResponsiveContainer>
                     </div>

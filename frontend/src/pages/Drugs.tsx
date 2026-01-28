@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useDrugs } from "@/hooks/useDrugs";
-import { formatDate } from "@/lib/utils";
+// import { formatDate } from "@/lib/utils";
 import type { Drug } from "@/types";
 import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
 import { useState } from "react";

@@ -41,9 +41,15 @@ export function CostTrendChart({ data, title = "Cost Trends", description }: Cos
                         <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} />
                         <Tooltip
                             contentStyle={{ backgroundColor: "rgba(255, 255, 255, 0.95)", border: "1px solid #ccc" }}
-                            formatter={(value: number, name: string) => {
-                                if (name.includes("cost")) return formatCurrency(value);
-                                return value.toFixed(0);
+                            formatter={(value: number | undefined, name: string | undefined) => {
+                                // Safe defaults if either is missing (rare, but satisfies TS)
+                                const safeName = name ?? "Unknown";
+                                const safeValue = value ?? 0;
+
+                                if (safeName.includes("cost")) {
+                                    return formatCurrency(safeValue);
+                                }
+                                return safeValue.toFixed(0);
                             }}
                         />
                         <Legend />

@@ -71,7 +71,10 @@ export interface Claim {
     claim_number: string;
     rx_number: string;
     member_id: number;
+    member_name: string;
     drug_id: number;
+    drug_name: string;
+    is_generic: boolean;
     pharmacy_id: number;
     fill_date: string;
     quantity: number;
