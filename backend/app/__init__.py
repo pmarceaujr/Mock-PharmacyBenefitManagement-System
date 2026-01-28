@@ -42,6 +42,11 @@ def create_app(config_name='development'):
     if env == "production":
         app.config.update({'DATABASE_URL': app.config.get('DATABASE_URL')})
 
+    # Heroku PostgreSQL URLs start with postgres:// but SQLAlchemy needs postgresql://
+    if app.config['SQLALCHEMY_DATABASE_URI'] and app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
+            
+
     app.config.update({
         # Security / Auth
         'SECRET_KEY': os.environ.get('SECRET_KEY') or app.config.get('SECRET_KEY'),
