@@ -1,0 +1,1 @@
+web: vendor/bin/start-nginx -c config/nginx.conf
