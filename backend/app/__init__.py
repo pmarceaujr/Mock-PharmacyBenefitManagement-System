@@ -80,6 +80,9 @@ def create_app(config_name='development'):
     print(f"database url: {app.config.get('DATABASE_URL')}")    
     print(f"SQLALCHEMY_DATABASE_URI: {app.config.get('SQLALCHEMY_DATABASE_URI')}") 
 
+ # Use Postgres on Heroku, SQLite locally
+    DATABASE_URL = app.config.get('DATABASE_URL')
+
     if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
         # Heroku provides "postgres://" but SQLAlchemy wants "postgresql://"
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
