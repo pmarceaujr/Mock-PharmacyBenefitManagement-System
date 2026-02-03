@@ -11,7 +11,6 @@ class AnalyticsService:
     def get_cost_trends_with_window_functions(days=90):
         """
         Use PostgreSQL window functions to calculate running totals and ranks
-        This demonstrates advanced SQL capabilities
         """
         start_date = datetime.utcnow().date() - timedelta(days=days)
         
@@ -102,7 +101,6 @@ class AnalyticsService:
     def calculate_member_risk_score():
         """
         Calculate risk scores for members based on utilization patterns
-        Uses multiple CTEs and window functions
         """
         query = text("""
             WITH member_stats AS (
